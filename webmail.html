@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Webmail System</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script>
+        mailstatus="inbox";
+        emailnum=5;
+        lastRecordinbox=0;
+        lastRecordimportant=0;
+        lastRecordtrash=0;
+        prevrecord=0;
+        var flag=0;
+        function clickinbox(){
+            document.getElementById("moveto").innerHTML="Move to Important";
+            document.getElementById("delete").innerHTML="Delete";
+            document.getElementById("inbox").style.color="yellow";
+            document.getElementById("important").style.color="white";
+            document.getElementById("trash").style.color="white";
+            document.getElementById("hiddenbutton").innerHTML="";
+            mailstatus="inbox";
+            inbox();
+            refreshbuttons();
+        }
+        function clickimportant(){
+            document.getElementById("moveto").innerHTML="Move to Inbox";
+            document.getElementById("delete").innerHTML="Delete";
+            document.getElementById("inbox").style.color="white";
+            document.getElementById("important").style.color="yellow";
+            document.getElementById("trash").style.color="white";
+            document.getElementById("hiddenbutton").innerHTML="";
+            mailstatus="important";
+            important();
+            refreshbuttons();
+        }
+        function clicktrash(){
+            document.getElementById("moveto").innerHTML="Move to Inbox";
+            document.getElementById("delete").innerHTML="Delete Forever";
+            document.getElementById("inbox").style.color="white";
+            document.getElementById("important").style.color="white";
+            document.getElementById("trash").style.color="yellow";
+            mailstatus="trash";
+            trash();
+            refreshbuttons();
+            document.getElementById("hiddenbutton").innerHTML="<button type=\"button\"  class=\"functionButton\" id=\"movetoinbox2\" onclick=\"movetoimportant()\">Move to Important</button>";
+        }
+        function handleemaildisplay(record,box){
+            var xmlhttp;
+            if (window.XMLHttpRequest){ // code for IE7+, Firefox, Chrome,etc.
+                xmlhttp = new XMLHttpRequest();
+            }else{ // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            num=5;
+            xmlhttp.open("GET","handleEmailDisplay.php?lastRecord="+record+"&box="+box+"&num="+num, true);
+            xmlhttp.send();
+            xmlhttp.onreadystatechange = function(){
+                if (xmlhttp.readyState == 4 && xmlhttp.status ==200){
+                    // The client’s action when the response is ready.
+                    document.getElementById("email").innerHTML=xmlhttp.responseText;
+                    var mailnum = document.getElementsByName(mailstatus);
+                    if(record>0&&mailnum.length==0){
+                        prev();
+                    }
+                }
+            }
+
+
+
+        }
+        function inbox() {
+            lastRecordinbox =0;
+            handleemaildisplay(lastRecordinbox,"inbox");
+            lastRecordinbox =5;
+        }
+        function important() {
+            lastRecordimportant = 0;
+            handleemaildisplay(lastRecordimportant,"important");
+            lastRecordimportant = 5;
+        }
+        function trash() {
+            lastRecordtrash = 0;
+            handleemaildisplay(lastRecordtrash,"trash");
+            lastRecordtrash = 5;
+        }
+        function next(){
+            nextbox="inbox";
+            lastRecord=lastRecordinbox;
+            if(mailstatus=="trash"){
+                lastRecord=lastRecordtrash;
+                nextbox="trash";
+
+            }else if(mailstatus=="important"){
+                lastRecord=lastRecordimportant;
+                nextbox="important";
+            }
+            handleemaildisplay(lastRecord,nextbox);
+            if(mailstatus=="trash"){
+                lastRecordtrash+=5;
+            }else if(mailstatus=="important"){
+                lastRecordimportant+=5;
+
+            }else if(mailstatus=="inbox"){
+                lastRecordinbox+=5;
+            }
+
+
+            prevrecord=1;
+        }
+        function prev(){
+            if(mailstatus=="inbox"){
+                prevbox="inbox";
+                lastRecordinbox-=5;
+                if(prevrecord==1){
+                    lastRecordinbox-=5;
+                    prevrecord=0;
+                }
+                if(lastRecordinbox<0){
+                    inbox();
+                    return;
+                }
+                lastRecordprev=lastRecordinbox;
+            } else if(mailstatus=="trash"){
+                prevbox="trash";
+                lastRecordtrash-=5;
+                if(prevrecord==1){
+                    lastRecordtrash-=5;
+                    prevrecord=0;
+                }
+                if(lastRecordtrash<0){
+                    trash();
+                    return;
+                }
+                lastRecordprev=lastRecordtrash;
+            }else if(mailstatus=="important"){
+                prevbox="important";
+                lastRecordimportant-=5;
+                if(prevrecord==1){
+                    lastRecordimportant-=5;
+                    prevrecord=0;
+                }
+                if(lastRecordimportant<0)
+                {
+                    important();
+                    return;
+                }
+                lastRecordprev=lastRecordimportant;
+            }
+           handleemaildisplay(lastRecordprev,mailstatus);
+            if(mailstatus=="inbox"){
+                lastRecordinbox+=5;
+            } else if(mailstatus=="trash"){
+                lastRecordtrash+=5;
+            }else if(mailstatus=="important"){
+                lastRecordimportant+=5;
+            }
+            prevrecord=1;
+        }
+        function getcontent(elem){
+            var noteID = elem.parentNode.getAttribute('id');
+
+            var xmlhttp;
+            if (window.XMLHttpRequest){ // code for IE7+, Firefox, Chrome,etc.
+                xmlhttp = new XMLHttpRequest();
+            }else{ // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            xmlhttp.open("GET","handleContentRequest.php?id="+noteID, true);
+            xmlhttp.send();
+
+            xmlhttp.onreadystatechange = function(){
+                if (xmlhttp.readyState == 4 && xmlhttp.status ==200){
+                    // The client’s action when the response is ready.
+                    document.getElementById("email").innerHTML = xmlhttp.responseText;
+                    document.getElementById("delete").disabled=true;
+                    document.getElementById("moveto").disabled=true;
+                    document.getElementById("prev").disabled=true;
+                    document.getElementById("next").disabled=true;
+                }
+            }
+        }
+        function refreshbuttons(){
+            document.getElementById("delete").disabled=false;
+            document.getElementById("moveto").disabled=false;
+            document.getElementById("prev").disabled=false;
+            document.getElementById("next").disabled=false;
+        }
+        function moveto(){
+            if(mailstatus=="inbox"){
+                movetoimportant();
+            }
+            else{
+                movetoinbox();
+            }
+        }
+        function handlechange(par,newlabel,cal) {
+            var xmlhttp;
+            if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome,etc.
+                xmlhttp = new XMLHttpRequest();
+            } else { // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.open("GET", "handleMailboxChange.php?id=" + par + "&newlabel=" + newlabel, true);
+            xmlhttp.send();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var thisNode = document.getElementById(par);
+                    thisNode.parentNode.removeChild(thisNode);
+                    flag+=1;
+                    finalhandle(cal);
+                }
+            }
+        }
+        function finalhandle(cal){
+            if(flag!=cal){return;}
+            var mylastRecord=lastRecordinbox-cal;
+            if(mailstatus=="trash"){
+                mylastRecord=lastRecordtrash-cal;
+            }else if(mailstatus=="important"){
+                mylastRecord=lastRecordimportant-cal;
+            }
+            var xmlhttp;
+            if (window.XMLHttpRequest){ // code for IE7+, Firefox, Chrome,etc.
+                xmlhttp = new XMLHttpRequest();
+            }else{ // code for IE6, IE5
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            xmlhttp.open("GET","handleEmailDisplay.php?lastRecord="+mylastRecord+"&box="+mailstatus+"&num="+cal, true);
+            xmlhttp.send();
+            xmlhttp.onreadystatechange = function(){
+                if (xmlhttp.readyState == 4 && xmlhttp.status ==200){
+                    // The client’s action when the response is ready.
+                    document.getElementById("email").innerHTML+=xmlhttp.responseText;
+
+                }
+
+
+
+            }
+            var mailnum = document.getElementsByName(mailstatus);
+            if(mailnum.length==0){
+
+                prev();
+            }
+            prevrecord=1;
+           flag=0;
+
+        }
+        function movetohandler(newlabel) {
+            var cal = 0;
+            var inboxmail = document.getElementsByName(mailstatus);
+            for (var j = 1; j <= inboxmail.length; j += 1) {
+                if (inboxmail[j - 1].checked) {
+                    cal += 1;
+                }
+            }
+                for (var i = 1; i <= inboxmail.length; i += 1) {
+                    if (inboxmail[i - 1].checked) {
+                        var par = inboxmail[i - 1].parentNode.getAttribute('id');
+                        handlechange(par, newlabel, cal);
+                    }
+                }
+        }
+
+
+
+        function movetoinbox(){
+            movetohandler("inbox");
+        }
+        function movetoimportant(){
+
+            movetohandler("important");
+        }
+        function movetotrash(){
+            movetohandler("trash");
+        }
+    </script>
+</head>
+<body onload="clickinbox()">
+    <a href="webmail.html"><div id="heading"><img src="zyfmail.png"></div></a>
+    <div id="function">
+        <button type="button"  class="functionButton" id="delete" onclick="movetotrash()">Delete</button>
+        <div id="hiddenbutton"></div>
+        <button type="button" class="functionButton" id="moveto" onclick="moveto()">Move to Important</button>
+        <button type="button" class="functionButton" id="prev" onclick="prev()" ><</button>
+        <button type="button" class="functionButton" id="next" onclick="next()">></button>
+    </div>
+    <div id="mailbox">
+        <ul>
+            <li><a id="inbox" href="javascript:void(0)"  onclick="clickinbox();">Inbox</a></li>
+            <li><a id="important" href="javascript:void(0)"  onclick="clickimportant();">Important</a></li>
+            <li><a id="trash" href="javascript:void(0)"  onclick="clicktrash();">Trash</a></li>
+        </ul>
+    </div>
+    <div id="email">
+        <input type="checkbox">
+        <a class="sender">Sender </a>
+        <a class="title" >Title</a>
+        <a class="date">Date</a>
+    </div>
+</body>
+</html>

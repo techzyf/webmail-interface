@@ -1,0 +1,157 @@
+body{
+    width: 100%; line-height: 1.3em;background:url(https://portali.hku.hk/cas-login/inner-bg.jpg) repeat-x 0 0 #caf3f7;
+}
+#heading img{
+    display:block;
+    max-width: 100%;
+    height: auto;
+}
+#function{
+   margin-left:30%;
+}
+#mailbox{
+    float:left;
+}
+#email{
+    margin-left:17%;
+    margin-top:25px;
+}
+#hiddenbutton{
+    display:inline;
+}
+#mailbox ul{
+    float: left;
+    margin-top:28px;
+    width: 100px;
+    padding: 5px;
+    background-color: #0a1f70;
+}
+#mailbox a{
+    text-decoration: none;
+
+    font-size: 16px;
+
+}
+#inbox{
+    color:yellow;
+}
+#important{
+    color:white;
+}
+#trash{
+    color:white;
+}
+#mailbox li{
+    display: block;
+    list-style-type: none;
+    margin-left: 5px;
+}
+
+.sender{
+    width:200px;
+}
+
+.title{
+    width:400px;
+}
+.date{
+
+    width:200px;
+
+}
+.functionButton{
+    margin-left:12px;
+    margin-right:12px;
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font: 16px/100% 'Microsoft yahei',Arial, Helvetica, sans-serif;
+    padding: .5em 2em .55em;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    -webkit-border-radius: .5em;
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    color: #606060;
+    border: solid 1px #b7b7b7;
+    background: #fff;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed));
+    background: -moz-linear-gradient(top,  #fff,  #ededed);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed');
+}
+.functionButton:hover {
+    text-decoration: none;
+    background: #ededed;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc));
+    background: -moz-linear-gradient(top,  #fff,  #dcdcdc);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dcdcdc');
+}
+.functionButton:active {
+    position: relative;
+    top: 1px;
+    color: #999;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#fff));
+    background: -moz-linear-gradient(top,  #ededed,  #fff);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff');
+}
+.emails a{
+    text-decoration: none;
+    display:inline-block;
+
+    font-size:18px;
+    color:#00527f;
+    background-color:#d9e8f3;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.emails a:hover{
+    color:yellow;
+    background-color:#8cbbda;
+}
+
+.emailcontent{
+    height:366px;
+    width:80%;
+    background-color:#d9e8f3;
+    font-size: 19px;
+    color:#00527f;
+}
+@media screen and (max-width: 1000px) and (min-width: 550px) {
+#function{
+    margin-left: 2px;
+}
+    .emails a{
+        display: block;
+        width:100%;
+    }
+}
+@media screen and (max-width: 550px) {
+    #function{
+        margin-left: 2px;
+        float:right;
+    }
+    #email{
+        margin-left: 2px;
+    }
+    #mailbox{
+        float:none;
+    }
+    #mailbox ul{
+        float:none;
+    }
+    .emails a{
+        display: block;
+        width:100%;
+    }
+    .functionButton{
+        display:block;
+        margin-left:8px;
+        margin-right:8px;
+        font: 5px/100% 'Microsoft yahei',Arial, Helvetica, sans-serif;
+    }
+}
+
